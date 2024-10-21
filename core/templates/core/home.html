@@ -37,15 +37,31 @@
         .join-button {
             display: inline-block;
             padding: 10px 15px;
-            background-color: #007bff;
+            background-color: #007bff; /* Blue color for join button */
             color: white;
             text-decoration: none;
             border-radius: 5px;
             transition: background-color 0.3s;
+            margin-top: 10px; /* Add some spacing above */
         }
 
         .join-button:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; /* Darker shade for hover effect */
+        }
+
+        .delete-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #dc3545; /* Red color for delete button */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-top: 10px; /* Add some spacing above */
+        }
+
+        .delete-button:hover {
+            background-color: #c82333; /* Darker shade for hover effect */
         }
 
         .create-room-button {
@@ -72,6 +88,12 @@
         <div class="chatroom-card">
             <h2 class="room-name">{{ r.name }}</h2>
             <a href="{% url 'join_room' r.id %}" class="join-button">Join</a>
+            {% if r.creator == user %}
+                <form action="{%url 'delete_room' r.id%}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-button">Delete</button>
+                </form>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

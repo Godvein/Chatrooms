@@ -2,40 +2,101 @@
 {% block content %}
 <script type="application/json" id="json_room_id">{{ room.id }}</script>
 
-<form id="form">
-    <input type="text" name="message"/>
-    <button type="submit">send</button>
-</form>
-
-<div id="messages"></div>
-<script type="text/javascript">
+<div class="chat-container">
+    <div id="messages" class="messages"></div>
     
+    <form id="form" class="chat-form">
+        <input type="text" name="message" placeholder="Type your message..." class="message-input" />
+        <button type="submit" class="send-button">Send</button>
+    </form>
+</div>
+
+<style>
+    .chat-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .messages {
+        height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .messages div {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #e1f5fe;
+        color: #0277bd;
+    }
+
+    .chat-form {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .message-input {
+        width: 80%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .send-button {
+        padding: 10px 20px;
+        background-color: #0277bd;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .send-button:hover {
+        background-color: #01579b;
+    }
+</style>
+
+<script type="text/javascript">
     const room_id = JSON.parse(document.getElementById('json_room_id').textContent);
-    url = `ws://${window.location.host}/ws/chat/${room_id}/`
+    let url = `ws://${window.location.host}/ws/chat/${room_id}/`;
 
-    chatSocket = new WebSocket(url)
+    const chatSocket = new WebSocket(url);
 
-    //when message is received from server
-    chatSocket.onmessage = function(e){
-        let data = JSON.parse(e.data)
-        if(data.type === "chat"){
-        let messages = document.getElementById("messages")
-        messages.insertAdjacentHTML("beforeend", `<div>
-            ${data.message}
-            </div>`)
-    }
-    }
+    // When message is received from server
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.type === "chat") {
+            const messages = document.getElementById("messages");
+            messages.insertAdjacentHTML("beforeend", `<div>
+                <strong>${data.username}:</strong> ${data.message}</div>`);
+            messages.scrollTop = messages.scrollHeight; // Auto-scroll to the bottom
+        }
+    };
 
-    let form = document.getElementById("form")
-    //action to take when form is submitted
+    const form = document.getElementById("form");
+    // Action to take when form is submitted
     form.addEventListener("submit", (e) => {
-        e.preventDefault()
-        let message = e.target.message.value
+        e.preventDefault();
+        const message = e.target.message.value;
         chatSocket.send(JSON.stringify({
-            "type" : "chat_message_sent",
-            "message" : message
-        }))
-        form.reset()
-    })
+            "type": "chat_message_sent",
+            "message": message
+        }));
+        form.reset();
+    });
 </script>
 {% endblock %}
