@@ -1,0 +1,7 @@
+{% extends "core/base.html" %}
+{% block content %} 
+<form action="{% url 'create_room' %}" method="post"> {% csrf_token %}
+    <input type="text" id="smallTextInput" name="smallTextInput" maxlength="20" placeholder="room name" required>
+    <button type="submit"> Create </button>
+</form>
+{% endblock %}
