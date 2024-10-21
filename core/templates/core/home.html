@@ -1,4 +1,78 @@
 {% extends "core/base.html" %}
-{% block content %}
 
+{% block content %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .chatroom-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; 
+        }
+
+        .chatroom-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 250px; 
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .chatroom-card:hover {
+            transform: scale(1.05); 
+        }
+
+        .room-name {
+            margin: 0 0 10px;
+            font-size: 1.5em; 
+        }
+
+        .join-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .join-button:hover {
+            background-color: #0056b3;
+        }
+
+        .create-room-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #28a745; 
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px; 
+            transition: background-color 0.3s;
+        }
+
+        .create-room-button:hover {
+            background-color: #218838;
+        }
+    </style>
+
+    <!-- Create Room Button -->
+    <a href="{% url 'create_room' %}" class="create-room-button">Create Room</a>
+
+    <div class="chatroom-container">
+        {% for r in rooms %}
+        <div class="chatroom-card">
+            <h2 class="room-name">{{ r.name }}</h2>
+            <a href="{% url 'join_room' r.id %}" class="join-button">Join</a>
+        </div>
+        {% endfor %}
+    </div>
 {% endblock %}
