@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'core'
 ]
 
+ASGI_APPLICATION = "chatproject.asgi.application"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -17,6 +17,6 @@ def createRoom(request):
 
 def joinRoom(request, id):
     room = rooms.objects.get(id = id)
-    return render(request, "core/room.html", {
+    return render(request, "core/chat.html", {
         "room" : room
     })
