@@ -56,7 +56,6 @@ print("REDIS_PORT:", REDIS_PORT)
 print("REDIS_PASSWORD:", REDIS_PASSWORD)
 
 
-
 # Channel Layer Configuration
 if REDIS_PASSWORD:
     # If a password is provided, format the address as a URL
@@ -121,6 +120,8 @@ WSGI_APPLICATION = 'chatproject.wsgi.application'
 DATABASES = {
     'default' : dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
+DATABASE_URL = os.getenv("DATABASE_URL")
+print(DATABASE_URL)
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
