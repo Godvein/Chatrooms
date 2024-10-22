@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout as user_logout
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as user_login
+import re
 # Create your views here.
 
 def logout(request):
@@ -13,10 +14,21 @@ def register(request):
     if request.method == "POST":
         
         username = request.POST.get("username")
+
         if User.objects.filter(username = username).exists():
             messages.error(request, "username already exists")
             return redirect("register")
+        
         password = request.POST.get("password")
+        if not re.search(r'[A-Z]', password):  
+            messages.error(request, "Password must contain at least one uppercase letter")
+            return redirect("register")
+
+        if not re.search(r'[0-9]', password):  
+            messages.error(request, "Password must contain at least one digit")
+            return redirect("register")
+
+       
         user = User(username = username, password = password)
         user.save()
         messages.success(request, "account created successfully please login")

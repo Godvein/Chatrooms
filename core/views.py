@@ -1,13 +1,14 @@
 from django.shortcuts import render,redirect
 from .models import rooms
+from django.views.generic import ListView
 
 from django.contrib import messages
 # Create your views here.
-def home(request):
-    room = rooms.objects.all()
-    return render(request, "core/home.html", {
-        "rooms" : room
-    })
+class home(ListView):
+    model = rooms
+    paginate_by = 6
+    template_name = "core/home.html"
+    context_object_name = 'rooms'
 
 def createRoom(request):
     
@@ -38,4 +39,7 @@ def deleteroom(request, id):
     room = rooms.objects.get(id = id)
     room.delete()
     return redirect("home")
+
+def about(request):
+    return render(request, "core/about.html")
 
