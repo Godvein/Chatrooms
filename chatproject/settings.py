@@ -28,7 +28,7 @@ load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -49,15 +49,31 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = "chatproject.asgi.application"
 
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT', 6379)
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)
+
+
+
+# Channel Layer Configuration
+if REDIS_PASSWORD:
+    # If a password is provided, format the address as a URL
+    address = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}'
+else:
+    address = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+
 CHANNEL_LAYERS = {
-    'default':{
+    'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6380)],  
+            "hosts": [
+                address,
+            ],
         },
-
-    }
+    },
 }
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
