@@ -76,32 +76,54 @@
 </style>
 
 <script type="text/javascript">
-    const room_id = JSON.parse(document.getElementById('json_room_id').textContent);
-    const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-    const wsUrl = `${protocol}${window.location.host}/ws/chat/${room_id}/`;
-    const chatSocket = new WebSocket(wsUrl);
+    let chatSocket;
 
+    function connectWebSocket() {
+        const room_id = JSON.parse(document.getElementById('json_room_id').textContent);
+        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const wsUrl = `${protocol}${window.location.host}/ws/chat/${room_id}/`;
+        chatSocket = new WebSocket(wsUrl);
 
-    // When message is received from server
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        if (data.type === "chat") {
-            const messages = document.getElementById("messages");
-            messages.insertAdjacentHTML("beforeend", `<div>
-                <strong>${data.username}:</strong> ${data.message}</div>`);
-            messages.scrollTop = messages.scrollHeight; // Auto-scroll to the bottom
-        }
-    };
+        // When message is received from server
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if (data.type === "chat") {
+                const messages = document.getElementById("messages");
+                messages.insertAdjacentHTML("beforeend", `<div>
+                    <strong>${data.username}:</strong> ${data.message}</div>`);
+                messages.scrollTop = messages.scrollHeight; // Auto-scroll to the bottom
+            }
+        };
+
+        chatSocket.onclose = function() {
+            console.error("WebSocket connection closed. Attempting to reconnect...");
+            setTimeout(connectWebSocket, 2000); // Reconnect after 2 seconds
+        };
+
+        chatSocket.onerror = function(err) {
+            console.error("WebSocket error:", err);
+        };
+    }
+
+    // Initialize WebSocket connection
+    connectWebSocket();
 
     const form = document.getElementById("form");
     // Action to take when form is submitted
     form.addEventListener("submit", (e) => {
         e.preventDefault();
         const message = e.target.message.value;
-        chatSocket.send(JSON.stringify({
-            "type": "chat_message_sent",
-            "message": message
-        }));
+
+        // Check if the WebSocket is open before sending the message
+        if (chatSocket.readyState === WebSocket.OPEN) {
+            chatSocket.send(JSON.stringify({
+                "type": "chat_message_sent",
+                "message": message
+            }));
+        } else {
+            console.error("WebSocket is not open. Current state:", chatSocket.readyState);
+            // Optionally, inform the user that the message could not be sent
+        }
         form.reset();
     });
 </script>
