@@ -51,6 +51,9 @@ ASGI_APPLICATION = "chatproject.asgi.application"
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT', 6379)
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)
+print("REDIS_HOST:", REDIS_HOST)
+print("REDIS_PORT:", REDIS_PORT)
+print("REDIS_PASSWORD:", REDIS_PASSWORD)
 
 
 
@@ -159,7 +162,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
 SESSION_COOKIE_SECURE = False  
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_AGE = 1209600  # 2 weeks, default value
