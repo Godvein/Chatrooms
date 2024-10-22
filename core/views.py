@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect
-from .models import rooms
+from .models import rooms,Messages
 from django.views.generic import ListView
-
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 class home(ListView):
     model = rooms
@@ -10,6 +10,7 @@ class home(ListView):
     template_name = "core/home.html"
     context_object_name = 'rooms'
 
+@login_required(login_url="/users/login/")
 def createRoom(request):
     
     if request.method == "POST":
@@ -28,13 +29,16 @@ def createRoom(request):
         return redirect("home")
     return render(request, "core/createroom.html")
 
+@login_required(login_url="/users/login/")
 def joinRoom(request, id):
-    
+    messages = Messages.objects.filter(room_id = id).order_by("timestamp")
     room = rooms.objects.get(id = id)
     return render(request, "core/chat.html", {
         "room" : room, 
+        "messages" : messages
     })
 
+@login_required(login_url="/users/login/")
 def deleteroom(request, id):
     room = rooms.objects.get(id = id)
     room.delete()

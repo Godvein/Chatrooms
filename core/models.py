@@ -7,3 +7,10 @@ class rooms(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class Messages(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room_id = models.CharField(max_length=255)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)

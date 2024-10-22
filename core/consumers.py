@@ -22,6 +22,7 @@ class ChatConsumer(WebsocketConsumer):
         message = json_text_data["message"]
         username = self.scope['user'].username
 
+        self.save_messages(message)
         #syncing group to the message
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
@@ -42,3 +43,18 @@ class ChatConsumer(WebsocketConsumer):
                   'username': username
             }))
     
+    #save message to database
+    def save_messages(self, message):
+        from .models import Messages
+        user = self.scope['user']  
+        room_id = self.room_id
+        Messages.objects.create(user=user, room_id=room_id, content=message)
+
+    def disconnect(self, close_code):
+    # Leave the room group
+        async_to_sync(self.channel_layer.group_discard)(
+            self.room_group_name,
+            self.channel_name
+        )
+
+         

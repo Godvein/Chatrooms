@@ -29,7 +29,7 @@ def register(request):
             return redirect("register")
 
        
-        user = User(username = username, password = password)
+        user = User.objects.create_user(username=username, password=password)
         user.save()
         messages.success(request, "account created successfully please login")
         return redirect("login")
@@ -41,6 +41,7 @@ def login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
+        print(user)
         if user is not None:
             user_login(request, user)
             return redirect("home")
