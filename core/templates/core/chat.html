@@ -17,62 +17,7 @@
 </div>
 
 <style>
-    .chat-container {
-        width: 100%;
-        max-width: 600px;
-        margin: 0 auto;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 20px;
-        background-color: #f9f9f9;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    .messages {
-        height: 300px;
-        overflow-y: auto;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 10px;
-        background-color: #fff;
-        margin-bottom: 20px;
-    }
-
-    .messages div {
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        background-color: #e1f5fe;
-        color: #0277bd;
-    }
-
-    .chat-form {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .message-input {
-        width: 80%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-    }
-
-    .send-button {
-        padding: 10px 20px;
-        background-color: #0277bd;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-    .send-button:hover {
-        background-color: #01579b;
-    }
+    /* Your existing CSS */
 </style>
 
 <script type="text/javascript">
@@ -102,13 +47,16 @@
             isSocketOpen = true;
             // Send queued messages when the socket is open
             while (messageQueue.length > 0) {
-                chatSocket.send(messageQueue.shift());
+                const messageData = messageQueue.shift();
+                console.log("Sending queued message:", messageData);
+                chatSocket.send(messageData);
             }
         };
 
-        chatSocket.onclose = function() {
-            console.error("WebSocket connection closed. Attempting to reconnect...");
+        chatSocket.onclose = function(event) {
             isSocketOpen = false;
+            console.error("WebSocket connection closed. Attempting to reconnect...");
+            console.log("Close event:", event);
             setTimeout(connectWebSocket, 2000); // Reconnect after 2 seconds
         };
 
@@ -134,6 +82,7 @@
 
         // Check if the WebSocket is open before sending the message
         if (isSocketOpen) {
+            console.log("Sending message:", messageData);
             chatSocket.send(messageData);
         } else {
             console.error("WebSocket is not open. Queueing message.");
