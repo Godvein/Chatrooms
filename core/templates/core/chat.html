@@ -77,9 +77,10 @@
 
 <script type="text/javascript">
     const room_id = JSON.parse(document.getElementById('json_room_id').textContent);
-    let url = `ws://${window.location.host}/ws/chat/${room_id}/`;
+    const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const wsUrl = `${protocol}${window.location.host}/ws/chat/${room_id}/`;
+    const chatSocket = new WebSocket(wsUrl);
 
-    const chatSocket = new WebSocket(url);
 
     // When message is received from server
     chatSocket.onmessage = function(e) {
