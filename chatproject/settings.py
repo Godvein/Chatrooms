@@ -160,5 +160,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False  
+SESSION_COOKIE_HTTPONLY = True
+
 
