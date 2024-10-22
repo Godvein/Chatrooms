@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .models import rooms
-from django.contrib.auth.models import User
+
 from django.contrib import messages
 # Create your views here.
 def home(request):
@@ -38,3 +38,4 @@ def deleteroom(request, id):
     room = rooms.objects.get(id = id)
     room.delete()
     return redirect("home")
+
