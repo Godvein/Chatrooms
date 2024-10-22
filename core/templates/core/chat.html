@@ -77,6 +77,8 @@
 
 <script type="text/javascript">
     let chatSocket;
+    let messageQueue = [];
+    let isSocketOpen = false;
 
     function connectWebSocket() {
         const room_id = JSON.parse(document.getElementById('json_room_id').textContent);
@@ -95,8 +97,18 @@
             }
         };
 
+        chatSocket.onopen = function() {
+            console.log("WebSocket connection established.");
+            isSocketOpen = true;
+            // Send queued messages when the socket is open
+            while (messageQueue.length > 0) {
+                chatSocket.send(messageQueue.shift());
+            }
+        };
+
         chatSocket.onclose = function() {
             console.error("WebSocket connection closed. Attempting to reconnect...");
+            isSocketOpen = false;
             setTimeout(connectWebSocket, 2000); // Reconnect after 2 seconds
         };
 
@@ -114,16 +126,20 @@
         e.preventDefault();
         const message = e.target.message.value;
 
+        // Prepare the message
+        const messageData = JSON.stringify({
+            "type": "chat_message_sent",
+            "message": message
+        });
+
         // Check if the WebSocket is open before sending the message
-        if (chatSocket.readyState === WebSocket.OPEN) {
-            chatSocket.send(JSON.stringify({
-                "type": "chat_message_sent",
-                "message": message
-            }));
+        if (isSocketOpen) {
+            chatSocket.send(messageData);
         } else {
-            console.error("WebSocket is not open. Current state:", chatSocket.readyState);
-            // Optionally, inform the user that the message could not be sent
+            console.error("WebSocket is not open. Queueing message.");
+            messageQueue.push(messageData); // Queue the message if the socket is not open
         }
+
         form.reset();
     });
 </script>
