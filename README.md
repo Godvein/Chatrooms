@@ -10,7 +10,7 @@ A web-based chatroom application that allows users to communicate in real time. 
 
 ## Status
 
-The chatroom website is currently under development and will be online soon.
+The chatroom website is currently hosted on render https://chatrooms-tszx.onrender.com
 
 ## License
 
