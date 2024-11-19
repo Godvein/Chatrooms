@@ -85,7 +85,10 @@ python manage.py createsuperuser
 
 Follow the prompts to create a username, email, and password.
 
-### Step 7: Run the Development Server
+### Step 7: Detele and Rename
+From chatproject folder delete productionsettings.py and rename developmentsettings.py to settings.py
+
+### Step 8: Run the Development Server
 
 To start the Django development server, use the following command:
 
