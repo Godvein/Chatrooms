@@ -2,6 +2,14 @@
 
 A web-based chatroom application that allows users to communicate in real time. The chatroom is designed to be simple, fast, and user-friendly.
 
+## Demo Video
+
+Watch a short demo of my project in action:
+
+
+https://github.com/user-attachments/assets/924f8b50-2cbe-4328-800d-773f78461017
+
+
 ## Features
 
 - Real-time messaging
