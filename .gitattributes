@@ -1,0 +1,10 @@
+# Ignore migrations (auto-generated files)
+core/migrations/* linguist-vendored
+users/migrations/* linguist-vendored
+
+# Ignore the project folder (contains settings.py, wsgi.py, etc.)
+chatproject/* linguist-vendored
+
+# Ignore Python compiled files
+*.pyc linguist-vendored
+*.pyo linguist-vendored
